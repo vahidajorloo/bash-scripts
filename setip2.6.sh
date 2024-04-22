@@ -40,8 +40,8 @@ sed -i "/BIGBLUEBUTTON_SECRET=/c\BIGBLUEBUTTON_SECRET=$secret2" ~/greenlight-v3/
 #sed -i "/SAFE_HOSTS/c\SAFE_HOSTS=$new_domain" ~/greenlight/.env #Deprycated
 #docker run --rm --env-file .env bigbluebutton/greenlight:v3 bundle exec rake conf:check
 docker-compose up -d
-echo "Sleep 30 Seconds"
-sleep 30
+echo "Sleep 180 Seconds"
+sleep 180
 service nginx restart
 bbb-conf --restart
 sed -i "s/$old_domain/$new_domain/g" /etc/zabbix/zabbix_agentd.conf
