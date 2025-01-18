@@ -27,10 +27,21 @@ fi
 
 subnet=$(echo "$ip" | awk -F. '{print $1 "." $2 "." $3 ".0"}')
 
+
+cat > /var/log/fastnetmon_attack_details.log
+attack_type=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack type:" | awk '{print $3}')
+
+if [ "$attack_type" = "unknown" ]; then
+    sleep 10
+    /usr/bin/fastnetmon_api_client unban $ip
+    cat /var/log/fastnetmon_attack_details.log | mail -s "Notify Only: IP $1 has Unknown Traffic And is not Blocked" $email_notify;
+    exit 0
+fi
+
 if [ "$4" = "ban" ]; then
     # This action receives multiple statistics about attack's performance and attack's sample to stdin
-    /opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib add $ip/24 community 12880:6762
-    cat | mail -s "FastNetMon Community: IP $1 blocked because $2 attack with power $3 pps" $email_notify;
+    /opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib add $ip/24 community 666:666
+    cat /var/log/fastnetmon_attack_details.log | mail -s "FastNetMon Community: IP $1 blocked because $2 attack with power $3 pps" $email_notify;
 
     # Please add actions to run when we ban host
     exit 0
@@ -38,8 +49,7 @@ fi
 
 if [ "$4" = "unban" ]; then
     # No details provided to stdin here
-    /opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib del $ip/24 community 12880:6762
+    /opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib del $ip/24 community 666:666
     # Please add actions to run when we unban host
     exit 0
 fi
-
