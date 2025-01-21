@@ -36,12 +36,14 @@ if [ "$attack_type" = "unknown" ]; then
     src_ip_port_count=$(tail -n +50 /var/log/fastnetmon_attack_details.log | head -n 6 | awk '{print $3}' | awk -F: '$2 == 8080 {print $1}' | uniq -c | wc -l)
 
     if [ "$src_ip_port_count" -eq 1 ]; then
+        echo "The source ip and ports are the same and this is propably a speedtest." >> /var/log/fastnetmon_attack_details.log
         # If source IP and port match, perform actions
         sleep 10
         /usr/bin/fastnetmon_api_client unban $ip
         cat /var/log/fastnetmon_attack_details.log | mail -s "Notify Only: IP $1 has Unknown Traffic And is not Blocked" $email_notify;
         exit 0
     fi
+        echo "The attack type is unknown but the source ip and port are not the same so it is not a speedtest." >> /var/log/fastnetmon_attack_details.log
 fi
 
 if [ "$4" = "ban" ]; then
