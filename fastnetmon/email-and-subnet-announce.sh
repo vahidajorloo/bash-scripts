@@ -32,10 +32,16 @@ cat > /var/log/fastnetmon_attack_details.log
 attack_type=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack type:" | awk '{print $3}')
 
 if [ "$attack_type" = "unknown" ]; then
-    sleep 10
-    /usr/bin/fastnetmon_api_client unban $ip
-    cat /var/log/fastnetmon_attack_details.log | mail -s "Notify Only: IP $1 has Unknown Traffic And is not Blocked" $email_notify;
-    exit 0
+    # Check if lines 50-55 have the same source IP address with port 8080
+    src_ip_port_count=$(tail -n +50 /var/log/fastnetmon_attack_details.log | head -n 6 | awk '{print $3}' | awk -F: '$2 == 8080 {print $1}' | uniq -c | wc -l)
+
+    if [ "$src_ip_port_count" -eq 1 ]; then
+        # If source IP and port match, perform actions
+        sleep 10
+        /usr/bin/fastnetmon_api_client unban $ip
+        cat /var/log/fastnetmon_attack_details.log | mail -s "Notify Only: IP $1 has Unknown Traffic And is not Blocked" $email_notify;
+        exit 0
+    fi
 fi
 
 if [ "$4" = "ban" ]; then
