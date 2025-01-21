@@ -18,12 +18,6 @@ email_notify="noc@tehranserver.ir"
 whitelist_file="/etc/networks_whitelist"
 
 ip="$1"
-if grep -q "^$ip$" "$whitelist_file"; then
-    echo "IP $ip is in the whitelist. Exiting script."
-    /usr/bin/fastnetmon_api_client unban $ip
-    exit 0
-fi
-
 
 subnet=$(echo "$ip" | awk -F. '{print $1 "." $2 "." $3 ".0"}')
 
