@@ -21,10 +21,11 @@ ip="$1"
 
 subnet=$(echo "$ip" | awk -F. '{print $1 "." $2 "." $3 ".0"}')
 
-
-cat > /var/log/fastnetmon_attack_details.log
-attack_type=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack type:" | awk '{print $3}')
-
+if [ "$4" = "ban" ]; then
+	#only when action is BAN we will insert attack log to the log file.
+	cat > /var/log/fastnetmon_attack_details.log
+	attack_type=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack type:" | awk '{print $3}')
+fi
 
 if [ "$attack_type" = "unknown" ]; then
     # Check if lines 81-100 have the same source IP address
