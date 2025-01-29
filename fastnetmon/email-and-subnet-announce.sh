@@ -23,17 +23,7 @@ subnet=$(echo "$ip" | awk -F. '{print $1 "." $2 "." $3 ".0"}')
 
 
 cat > /var/log/fastnetmon_attack_details.log
-attack_direction=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack direction:" | awk '{print $3}' )
 attack_type=$(cat /var/log/fastnetmon_attack_details.log | grep "Attack type:" | awk '{print $3}')
-
-if [ "$attack_direction" = "outgoing" ]; then
-	# Checks if Attack Direction is outgoing then ignores it.
-	echo "The Flow Direction is Outgoing so we will ignore this alarm." >> /var/log/fastnetmon_attack_details.log
-	sleep 10
-	/usr/bin/fastnetmon_api_client unban $ip
-	cat /var/log/fastnetmon_attack_details.log | mail -s "Notify Only: IP $1 has Outgoing Traffic And is not Blocked" $email_notify;
-	exit 0
-fi
 
 
 if [ "$attack_type" = "unknown" ]; then
