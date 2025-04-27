@@ -54,3 +54,4 @@ service zabbix-agent restart
 docker exec greenlight-v3 bundle exec rake user:create["$my_username","$my_email","$my_password","Administrator"]
 bbb-conf --secret
 
+echo "Installation is complete."
