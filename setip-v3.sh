@@ -24,7 +24,8 @@ sed -i "s/$old_domain/$new_domain/g" /etc/nginx/sites-available/bigbluebutton
 sed -i "s/$old_domain/$new_domain/g" /etc/turnserver.conf
 sed -i "s/$old_ip/$new_ip/g" /usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties
 sed -i "s/$old_ip/$new_ip/g" /etc/turnserver.conf
-
+sed -i "s/$old_domain/$new_domain/g" /etc/letsencrypt/renewal-hooks/deploy/haproxy
+sed -i "s/$old_domain/$new_domain/g" /etc/bigbluebutton/turn-stun-servers.xml
 systemctl restart coturn
 rm -rf /etc/letsencrypt/renewal/*
 rm -rf /etc/letsencrypt/live/*
