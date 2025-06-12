@@ -67,6 +67,7 @@ fi
 
 if [ "$4" = "unban" ]; then
     # No details provided to stdin here
+    # this line will remove /24 tag after 60 minutes so if multiple ip addresses from one subnet has been banned it wont delete the /24 tag and cause problem.
     echo "/opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib del $ip/24 community 12880:6762" | at now + 60 minutes
     /opt/fastnetmon-community/libraries/gobgp_3_12_0/gobgp global rib del $ip/32 community 6762:666
     # Please add actions to run when we unban host
